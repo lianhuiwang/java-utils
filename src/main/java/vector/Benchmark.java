@@ -26,4 +26,10 @@ public abstract class Benchmark<T> {
   // evaluate col_1 + col_3
   public abstract void col1AddCol3();
   
+  //evaluate col_1 + col_3
+  public abstract void col1AddCol3AddOne();
+  
+  //evaluate col_1 + col_3
+  public abstract void col1AddCol3AddOne2();
+  
 }

@@ -6,11 +6,16 @@ public class RunBench {
     System.out.println("Vectorized evaluation.");
     System.out.println("=================================");
     Benchmark vector = new BenchVector();
-    vector.col1AddCol3();
+    vector.col1AddCol3AddOne();
+    
+    System.out.println("Vectorized evaluation.");
+    System.out.println("=================================");
+    Benchmark vector2 = new BenchVector();
+    vector2.col1AddCol3AddOne2();
     
     System.out.println("No Vector evaluation.");
     System.out.println("=================================");
     Benchmark noVector = new BenchNoVector();
-    noVector.col1AddCol3();
+    noVector.col1AddCol3AddOne();
   }
 }
