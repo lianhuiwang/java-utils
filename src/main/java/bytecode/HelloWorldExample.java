@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import org.objectweb.asm.*;
 
 /**
+ * https://en.wikipedia.org/wiki/Java_bytecode_instruction_listings
  * https://github.com/eroshenkoam/asm-examples
  * javap -c *.class
  * @author lianhui
