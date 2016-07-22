@@ -8,8 +8,10 @@ import java.util.Map;
 
 public class CodegenContext {
   
+  
+  public ExprCode[] currentVars = null;
   // 维护变量名与对象关系
-  private List<Object> references = new ArrayList<Object>();
+  public List<Object> references = new ArrayList<Object>();
   
   // 维持变量名更新
   private Map<String, Integer> freshNameIds = new HashMap<String, Integer>();
@@ -30,11 +32,11 @@ public class CodegenContext {
     if (className == null) {
       className = obj.getClass().getName();
     }
-    addMutableState(className, term, term + " = (" + className + ") references[" + idx + "]"); 
+    addMutableState(className, term, term + " = (" + className + ") references[" + idx + "];"); 
     return term;
   }
   
-  private void addMutableState(String className, String term, String initCode) {
+  public void addMutableState(String className, String term, String initCode) {
    this.variables.add(new Variable(className, term, initCode));
   }
 
@@ -49,19 +51,19 @@ public class CodegenContext {
     }
   }
   
-  public String initMutableStates() {
+  public String declareMutableStates() {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < this.variables.size(); i++) {
       Variable variable = this.variables.get(i);
       if (i != 0) {
         sb.append("\n");
       }
-      sb.append("private ").append(variable.type).append(" ").append(variable.name);
+      sb.append("private ").append(variable.type).append(" ").append(variable.name).append(";");
     }
     return sb.toString();
   }
   
-  public String declareMutableStates() {
+  public String initMutableStates() {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < this.variables.size(); i++) {
       Variable variable = this.variables.get(i);
@@ -87,8 +89,4 @@ public class CodegenContext {
     }
     return sb.toString();
   }
-  
-  
-  
-
 }

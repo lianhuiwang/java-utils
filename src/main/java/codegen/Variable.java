@@ -6,9 +6,9 @@ public class Variable {
   public String type;
   public String initCode;
   
-  public Variable(String name, String type, String initCode) {
-    this.name = name;
+  public Variable(String type, String name, String initCode) {
     this.type = type;
+    this.name = name;
     this.initCode = initCode;
   }
   

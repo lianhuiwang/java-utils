@@ -1,5 +1,7 @@
 package codegen;
 
+import java.util.Iterator;
+
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.janino.ClassBodyEvaluator;
 
@@ -44,7 +46,7 @@ public class CodeGenerator {
     }
     return (T) evaluator.getClazz().newInstance();
   }
-  
+
   public static void main(String[] args) {
     CodeGenerator codeGen = new CodeGenerator();
     String code = "public Object generate(Object[] references) {\n" +
