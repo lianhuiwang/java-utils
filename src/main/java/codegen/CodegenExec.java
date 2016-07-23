@@ -1,20 +1,33 @@
 package codegen;
 
-public class CodegenExec extends CodegenSupport{
+import java.util.Iterator;
+
+public class CodegenExec extends CodegenOperator{
   
-  public CodegenExec(CodegenSupport child) {
+  public CodegenExec(CodegenOperator child) {
     super(child);
   }
 
   @Override
-  public String doConsume(CodegenContext ctx, ExprCode[] input) {
+  public String doConsume(CodegenContext ctx, ExprCode[] input, String row) {
     System.out.println("CodegenExec doConsume()");
     ctx.currentVars = input;
     String isNull = ctx.freshName("isNull");
-    String value = ctx.freshName("value");
-    //String thisValue = ctx.addReferenceObj("codegenExec", this, null);
-    String code = input[0].code + "\n"+
-     "this.collect(" + input[0].value + ");\n";
+    // String value = ctx.freshName("value");
+    String result = ctx.freshName("result");
+    ctx.addMutableState("InternalRow", result, 
+        result + "= new InternalRow(" + input.length + ");");
+    StringBuilder exprCode = new StringBuilder();
+    for (int i = 0; i < input.length; i++) {
+      exprCode.append(input[i].code).append("\n");
+    }
+    
+    for (int i = 0; i < input.length; i++) {
+      exprCode.append(result + ".set(" + i + "," + input[i].value + ");\n");
+    }
+    
+    String code = exprCode + "\n"+
+     "this.collect(" + result + ");\n";
     System.out.println("CodegenExec consumeCode=" + code);
     return code;
   }
@@ -63,14 +76,10 @@ public class CodegenExec extends CodegenSupport{
       e.printStackTrace();
     } 
   }
-  
-  public static void main(String[] args) {
-    // (col1 + 2) * 3 
-    InputAdaptor input = new InputAdaptor(null);
-    AddExec add = new AddExec(input, 2);
-    MultiplyExec multiply = new MultiplyExec(add, 3);;
-    CodegenExec exec = new CodegenExec(multiply);
-    exec.doCodeGenExec();
+
+  @Override
+  public Iterator<InternalRow> execution() {
+    return this.child.execution();
   }
 
 }

@@ -8,8 +8,10 @@ import java.util.Map;
 
 public class CodegenContext {
   
+  public String INPUT_ROW = "i";
   
   public ExprCode[] currentVars = null;
+  
   // 维护变量名与对象关系
   public List<Object> references = new ArrayList<Object>();
   
@@ -88,5 +90,25 @@ public class CodegenContext {
       sb.append(functions.next());
     }
     return sb.toString();
+  }
+
+  public String javaType(DataType dataType) {
+    switch(dataType) {
+    case IntType:
+      return "int";
+    case LongType:
+      return "long";
+    }
+    return "Object";
+  }
+  
+  public String primitiveTypeName(DataType dataType) {
+    switch(dataType) {
+    case IntType:
+      return "Int";
+    case LongType:
+      return "Long";
+    }
+    return "Object";
   }
 }
