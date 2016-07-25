@@ -10,6 +10,10 @@ public class CodegenContext {
   
   public String INPUT_ROW = "i";
   
+  public String INPUT_ROW_ID = "rowId";
+  
+  public boolean isVector = false;
+  
   public ExprCode[] currentVars = null;
   
   // 维护变量名与对象关系

@@ -15,14 +15,14 @@ public class BenchVector extends Benchmark<VectorizedRowBatch[]> {
     for (int i = 0; i < numRowBatches; i++) {
       rowBatches[i] = new VectorizedRowBatch(colCount + 1, rowBatchSize);
       for (int j = 0 ; j < colCount; j++) {
-        LongColumnVector columnVector = new LongColumnVector(rowBatchSize);
+        OnHeapColumnVector columnVector = new OnHeapColumnVector(rowBatchSize);
         for (int k = 0; k < rowBatchSize; k ++) {
           columnVector.vector[k] = baseValues[j] + i * rowBatchSize + k;
         }
         rowBatches[i].cols[j] = columnVector;
       }
       // Set up the last column for storing results.
-      LongColumnVector columnVector = new LongColumnVector(rowBatchSize);
+      OnHeapColumnVector columnVector = new OnHeapColumnVector(rowBatchSize);
       rowBatches[i].cols[colCount] = columnVector;
     }    
     return rowBatches;

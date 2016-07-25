@@ -2,6 +2,8 @@ package codegen;
 
 import java.util.Iterator;
 
+import vector.VectorizedRowBatch;
+
 public abstract class CodegenOperator {
 
   protected CodegenOperator child = null;
@@ -14,6 +16,8 @@ public abstract class CodegenOperator {
   public abstract String doConsume(CodegenContext ctx, ExprCode[] input, String row);
   
   public abstract Iterator<InternalRow> execution();
+  
+  public abstract Iterator<VectorizedRowBatch> vectorExecution();
   
   public BoundReference[] output() {
     return child.output();

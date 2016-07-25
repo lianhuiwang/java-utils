@@ -1,5 +1,7 @@
 package codegen;
 
+import vector.VectorizedRowBatch;
+
 public class BinaryArithmetic extends Expression {
 
   private Expression left;
@@ -27,11 +29,8 @@ public class BinaryArithmetic extends Expression {
   public DataType dataType() {
     return this.left.dataType();
   }
-
-  @Override
-  public Object eval(InternalRow input) {
-    Object value1 = this.left.eval(input);
-    Object value2 = this.right.eval(input);
+  
+  private Object compute(Object value1, Object value2) {
     switch(symbol) {
     case ADD:
       switch(this.dataType()) {
@@ -52,6 +51,21 @@ public class BinaryArithmetic extends Expression {
     }
     return null;
   }
+
+  @Override
+  public Object eval(InternalRow input) {
+    Object value1 = this.left.eval(input);
+    Object value2 = this.right.eval(input);
+    return compute(value1, value2);
+  }
+  
+  @Override
+  public Object evalVector(VectorizedRowBatch input, int k) {
+    Object value1 = this.left.evalVector(input, k);
+    Object value2 = this.right.evalVector(input, k);
+    return compute(value1, value2);
+  }
+  
 
   @Override
   public ExprCode genCode(CodegenContext ctx) {

@@ -1,5 +1,7 @@
 package codegen;
 
+import vector.VectorizedRowBatch;
+
 public class Literal extends Expression {
 
   private Object value;
@@ -23,6 +25,12 @@ public class Literal extends Expression {
 
   @Override
   public Object eval(InternalRow input) {
+    // TODO Auto-generated method stub
+    return this.value;
+  }
+  
+  @Override
+  public Object evalVector(VectorizedRowBatch input, int k) {
     // TODO Auto-generated method stub
     return this.value;
   }
