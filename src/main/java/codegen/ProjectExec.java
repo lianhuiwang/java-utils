@@ -12,6 +12,7 @@ public class ProjectExec extends CodegenOperator {
   private DataType[] outputTypes;
   
   private final VectorizedRowBatch rowBatches;
+  private Object[] rows;
   
   public ProjectExec(CodegenOperator child, Expression[] projectList) {
     super(child);
@@ -66,7 +67,67 @@ public class ProjectExec extends CodegenOperator {
       }
     };
   }
-  
+
+  @Override
+  public void beginRow() {
+    this.rows = new Object[projectList.length];
+    this.child.beginRow();
+  }
+
+  @Override
+  public boolean hasNextRow() {
+    return this.child.hasNextRow();
+  }
+
+  @Override
+  public InternalRow nextRow() {
+    InternalRow input = this.child.nextRow();
+    //for (int i = 0; i < projectList.length; i++) {
+      //rows[i] = projectList[i].eval(input);
+      long value = input.getLong(0) + 2L + input.getLong(1) + input.getLong(2) + input.getLong(0);
+      rows[0] = value;
+    //}
+    return new InternalRow(rows);
+  }
+
+  @Override
+  public void endRow() {
+
+  }
+
+  @Override
+  public void beginVector() {
+    this.child.beginVector();
+  }
+
+  @Override
+  public boolean hasNextVector() {
+    return this.child.hasNextVector();
+  }
+
+  @Override
+  public VectorizedRowBatch nextVector() {
+    VectorizedRowBatch input = this.child.nextVector();
+    rowBatches.setNumRows(input.numRows);
+    long value;
+
+    for (int k = 0; k < input.numRows(); k++) {
+      // for (int j = 0; j < projectList.length; j++) {
+        value = input.getCols(0).getLong(k) + 2L + input.getCols(1).getLong(k) +
+                input.getCols(2).getLong(k) + input.getCols(0).getLong(k);
+
+        rowBatches.getCols(0).putLong(k, value);
+        // rowBatches.getCols(j).putLong(k, (long) projectList[j].evalVector(input, k));
+      //}
+    }
+    return rowBatches;
+  }
+
+  @Override
+  public void endVector() {
+
+  }
+
   public DataType[] getOutputDataTypes() {
     return this.outputTypes;
   }

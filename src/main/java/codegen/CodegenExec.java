@@ -71,6 +71,7 @@ public class CodegenExec extends CodegenOperator{
          "} \n";
     
     try {
+      //System.out.println("source=" + source);
       GeneratedClass object = CodeGenerator.doCompiler(source);
       Object[] references = ctx.references.toArray();
       Collector collect = (Collector) object.generate(references);
@@ -90,6 +91,46 @@ public class CodegenExec extends CodegenOperator{
   @Override
   public Iterator<VectorizedRowBatch> vectorExecution() {
     return this.child.vectorExecution();
+  }
+
+  @Override
+  public void beginRow() {
+    this.child.beginRow();
+  }
+
+  @Override
+  public boolean hasNextRow() {
+    return this.child.hasNextRow();
+  }
+
+  @Override
+  public InternalRow nextRow() {
+    return this.child.nextRow();
+  }
+
+  @Override
+  public void endRow() {
+    this.child.endRow();
+  }
+
+  @Override
+  public void beginVector() {
+    this.child.beginVector();
+  }
+
+  @Override
+  public boolean hasNextVector() {
+    return this.child.hasNextVector();
+  }
+
+  @Override
+  public VectorizedRowBatch nextVector() {
+    return this.child.nextVector();
+  }
+
+  @Override
+  public void endVector() {
+    this.child.endVector();
   }
 
 }

@@ -15,10 +15,13 @@ public class BoundReference extends Expression {
     this.nullable = nullable;
   }
 
+  public int getIndex() {
+    return index;
+  }
+
   public DataType dataType() {
     return this.dataType;
   }
-
 
   @Override
   public DataType[] inputTypes() {

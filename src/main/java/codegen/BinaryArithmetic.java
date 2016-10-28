@@ -4,8 +4,8 @@ import vector.VectorizedRowBatch;
 
 public class BinaryArithmetic extends Expression {
 
-  private Expression left;
-  private Expression right;
+  public Expression left;
+  public Expression right;
   private Symbol symbol;
   
   public enum Symbol {

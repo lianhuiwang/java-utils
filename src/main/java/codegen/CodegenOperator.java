@@ -18,6 +18,22 @@ public abstract class CodegenOperator {
   public abstract Iterator<InternalRow> execution();
   
   public abstract Iterator<VectorizedRowBatch> vectorExecution();
+
+  public abstract void beginRow();
+
+  public abstract boolean hasNextRow();
+
+  public abstract InternalRow nextRow();
+
+  public abstract void endRow();
+
+  public abstract void beginVector();
+
+  public abstract boolean hasNextVector();
+
+  public abstract VectorizedRowBatch nextVector();
+
+  public abstract void endVector();
   
   public BoundReference[] output() {
     return child.output();

@@ -16,6 +16,8 @@ public class InputAdaptor extends CodegenOperator {
   
   private int valInt = 1;
   private Long valLong = 1L;
+
+  private int rowIndex = 0;
   
   public InputAdaptor(DataType[] colTypes, int rowSize) {
     super(null);
@@ -106,6 +108,50 @@ public class InputAdaptor extends CodegenOperator {
   @Override
   public Iterator<VectorizedRowBatch> vectorExecution() {
     return this.inputsVector.iterator();
+  }
+
+  @Override
+  public void beginRow() {
+    this.rowIndex = 0;
+  }
+
+  @Override
+  public boolean hasNextRow() {
+    return this.rowIndex < this.inputs.size();
+  }
+
+  @Override
+  public InternalRow nextRow() {
+    InternalRow result = this.inputs.get(this.rowIndex);
+    this.rowIndex ++;
+    return result;
+  }
+
+  @Override
+  public void endRow() {
+
+  }
+
+  @Override
+  public void beginVector() {
+    this.rowIndex = 0;
+  }
+
+  @Override
+  public boolean hasNextVector() {
+    return this.rowIndex < this.inputsVector.size();
+  }
+
+  @Override
+  public VectorizedRowBatch nextVector() {
+    VectorizedRowBatch result = this.inputsVector.get(this.rowIndex);
+    this.rowIndex ++;
+    return result;
+  }
+
+  @Override
+  public void endVector() {
+
   }
 
   @Override
