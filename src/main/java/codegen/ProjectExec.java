@@ -42,6 +42,11 @@ public class ProjectExec extends CodegenOperator {
         }
         return new InternalRow(values);
       }
+
+      @Override
+      public void remove() {
+
+      }
     };
   }
   
@@ -65,6 +70,11 @@ public class ProjectExec extends CodegenOperator {
         }
         return rowBatches;
       }
+
+      @Override
+      public void remove() {
+
+      }
     };
   }
 
@@ -84,7 +94,8 @@ public class ProjectExec extends CodegenOperator {
     InternalRow input = this.child.nextRow();
     //for (int i = 0; i < projectList.length; i++) {
       //rows[i] = projectList[i].eval(input);
-      long value = input.getLong(0) + 2L + input.getLong(1) + input.getLong(2) + input.getLong(0);
+      //long value = input.getLong(0) + 2L + input.getLong(1) + input.getLong(2) + input.getLong(0);
+    long value = input.getLong(0);
       rows[0] = value;
     //}
     return new InternalRow(rows);
@@ -113,9 +124,9 @@ public class ProjectExec extends CodegenOperator {
 
     for (int k = 0; k < input.numRows(); k++) {
       // for (int j = 0; j < projectList.length; j++) {
-        value = input.getCols(0).getLong(k) + 2L + input.getCols(1).getLong(k) +
-                input.getCols(2).getLong(k) + input.getCols(0).getLong(k);
-
+//        value = input.getCols(0).getLong(k) + 2L + input.getCols(1).getLong(k) +
+//                input.getCols(2).getLong(k) + input.getCols(0).getLong(k);
+        value = input.getCols(0).getLong(k);
         rowBatches.getCols(0).putLong(k, value);
         // rowBatches.getCols(j).putLong(k, (long) projectList[j].evalVector(input, k));
       //}

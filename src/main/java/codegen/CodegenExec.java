@@ -58,6 +58,9 @@ public class CodegenExec extends CodegenOperator{
          "public GeneratedIterator(Object[] references) {\n" +
            "this.references = references; \n"+
           "} \n" +
+            "  public int getResultCount() {\n" +
+            "    return 0;\n" +
+            "  }"+
           "public void setup(Collector outputCollector) { \n" +
             " this.outputCollector = outputCollector; \n" +
           "}\n" +

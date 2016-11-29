@@ -9,4 +9,6 @@ public interface Collector {
   void collect(Object record);
   
   void processRecord();
+
+  int getResultCount();
 }

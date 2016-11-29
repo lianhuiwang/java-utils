@@ -54,6 +54,11 @@ public class PrintCollector implements Collector {
   }
 
   @Override
+  public int getResultCount() {
+    return resultCount;
+  }
+
+  @Override
   public void processRecord() {
     // TODO Auto-generated method stub
 

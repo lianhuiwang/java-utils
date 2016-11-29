@@ -239,6 +239,9 @@ public class LocalExecution {
           + "resultCount=" + printCollect.resultCount);
     }
   }
+
+  public static void testProject1() {}
+
   
   public static void main(String[] args) {
     
