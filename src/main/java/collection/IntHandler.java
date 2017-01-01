@@ -1,6 +1,9 @@
 package collection;
 
+import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import sun.misc.Unsafe;
 
 /**
  * Created by puyuan.wlh on 16/12/31.
@@ -22,28 +25,25 @@ public class IntHandler {
 	private static final int INTERRUPTED  = 6;
 
 	// Unsafe mechanics
-//	private static final sun.misc.Unsafe UNSAFE;
-//	private static final long stateOffset;
-//	private static final long runnerOffset;
-//	private static final long waitersOffset;
-//	static {
-//		try {
-//			UNSAFE = sun.misc.Unsafe.getUnsafe();
-//			Class<?> k = IntHandler.class;
-//			stateOffset = UNSAFE.objectFieldOffset
-//					(k.getDeclaredField("state"));
-//			runnerOffset = UNSAFE.objectFieldOffset
-//					(k.getDeclaredField("current"));
-////			waitersOffset = UNSAFE.objectFieldOffset
-////					(k.getDeclaredField("waiters"));
-//		} catch (Exception e) {
-//			throw new Error(e);
-//		}
-//	}
+	private static final sun.misc.Unsafe UNSAFE;
+	private static final long stateOffset;
+	private static final long runnerOffset;
+	static {
+		try {
+			Field unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
+			unsafeField.setAccessible(true);
+			UNSAFE = (sun.misc.Unsafe) unsafeField.get(null);
+			Class<?> k = IntHandler.class;
+			stateOffset = UNSAFE.objectFieldOffset(k.getDeclaredField("state"));
+			runnerOffset = UNSAFE.objectFieldOffset(k.getDeclaredField("current"));
+		} catch (Throwable e) {
+			throw new Error(e);
+		}
+	}
 
 	public IntHandler(Integer iVal) {
 		this.iVal = iVal;
-		//this.state = NEW;
+		this.state = NEW;
 	}
 
 
@@ -52,11 +52,9 @@ public class IntHandler {
 	}
 
 	public void execute() throws ServerException {
-		current = Thread.currentThread();
-//		if (state != NEW ||
-//				!UNSAFE.compareAndSwapObject(this, runnerOffset,
-//						null, Thread.currentThread()))
-//			return;
+		// current = Thread.currentThread();
+		if (state != NEW || !UNSAFE.compareAndSwapObject(this, runnerOffset, null, Thread.currentThread()))
+			return;
 		if (iVal > 10) {
 			//System.out.println(Thread.currentThread().getId() + ":  " +  current.isInterrupted());
 			if (current.isInterrupted()) {
@@ -110,9 +108,9 @@ public class IntHandler {
 
 	public void cancelHandler() {
 		synchronized (lock) {
-//			if (!UNSAFE.compareAndSwapInt(this, stateOffset, NEW, INTERRUPTING))
-//				return;
-			state = INTERRUPTING;
+			if (!UNSAFE.compareAndSwapInt(this, stateOffset, NEW, INTERRUPTING))
+				return;
+			// state = INTERRUPTING;
 			if (current != null) {
 				current.interrupt();
 			}
